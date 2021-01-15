@@ -37,7 +37,7 @@ export class AuthenticateService {
         this.afAuth.signOut()
           .then(() => {
             console.log("LOG Out");
-            resolve;
+            resolve();
           }).catch((error) => {
             reject();
           });
