@@ -1,28 +1,52 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Dashboard</ion-title>
+  <ion-toolbar >
+    <ion-title >Conversación</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content  class="ion-padding">
 
-  <ion-grid>
-    <ion-row>
-      <ion-col text-center>
-        Welcome to Dashboard!
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col text-center>
-        Your Registered EmailID : {{userEmail}}
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      <ion-list lines="full" >
+    
+        <form [formGroup]="messageForm" (ngSubmit)="CreateRecord()">
+    
+          <ion-item>
+            <ion-label position="floating">Usuario</ion-label>
+            <ion-input formControlName="Name" disabled value={{userEmail}}></ion-input>
+          </ion-item>
+    
+          <ion-item>
+            <ion-label position="floating">Escribe un mensaje</ion-label>
+            <ion-input formControlName="Message"></ion-input>
+          </ion-item>
+          
+          <ion-item>
+            <ion-button (click)="CreateRecord()" [disabled]="messageForm.invalid" >
+              <ion-icon size="small" slot="icon-only" name="send-outline"></ion-icon>
+              &nbsp;Enviar
+            </ion-button>
+          </ion-item>
+        </form>
 
-
+    
+        <ion-list *ngFor='let item of messageList ' style="background-color:black;">
+          <ion-card-header>
+            <ion-card-subtitle style="color: white;">De: {{item.Name}}</ion-card-subtitle>
+            <ion-card-subtitle style="color: white;">Mensaje: {{item.Message}}</ion-card-subtitle>
+          </ion-card-header>
+        </ion-list>
+    
+      </ion-list>
+    
 </ion-content>
+
 <ion-footer (click)="logout()">
+  
   <ion-toolbar color="secondary">
-    <ion-title>Log out</ion-title>
+    
+    <ion-title>
+      <ion-icon size="large" name="exit-outline"></ion-icon>
+    </ion-title>
   </ion-toolbar>
 </ion-footer>
+

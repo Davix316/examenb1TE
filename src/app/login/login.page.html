@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Login</ion-title>
+    <ion-title>Ingresar</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,7 +8,7 @@
   <form class="form" [formGroup]="validations_form" (ngSubmit)="loginUser(validations_form.value)">
 
     <ion-item>
-      <ion-label position="floating" color="primary">Email</ion-label>
+      <ion-label position="floating" color="primary">Correo</ion-label>
       <ion-input type="text" formControlName="email"></ion-input>
     </ion-item>
     <div class="validation-errors">
@@ -21,7 +21,7 @@
     </div>
 
     <ion-item>
-      <ion-label position="floating" color="primary">Password</ion-label>
+      <ion-label position="floating" color="primary">Contraseña</ion-label>
       <ion-input type="password" formControlName="password" class="form-controll" required></ion-input>
     </ion-item>
     <div class="validation-errors">
@@ -33,11 +33,14 @@
       </ng-container>
     </div>
 
-    <ion-button class="submit-btn" type="submit" [disabled]="!validations_form.valid">Log In</ion-button>
+    <ion-button class="submit-btn" type="submit" [disabled]="!validations_form.valid">
+      <ion-icon name="log-in-outline"></ion-icon>
+      Ingresar
+    </ion-button>
 
     <label class="error-message">{{errorMessage}}</label>
   </form>
   <p class="go-to-register">
-    No account yet? <a (click)="goToRegisterPage()">Create an account.</a>
+    No tienes cuenta? <a (click)="goToRegisterPage()">Crear una cuenta.</a>
   </p>
 </ion-content>
