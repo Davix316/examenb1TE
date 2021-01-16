@@ -1,14 +1,21 @@
 // dashboard.page.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { AuthenticateService } from '../services/authentication.service';
 import { FirebaseService } from '../services/firebase.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 //import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import {AngularFireStorage} from '@angular/fire/storage';
+import { Observable } from 'rxjs/internal/Observable';
+import { finalize } from 'rxjs/operators';
+import { UploadTask } from '@angular/fire/storage/interfaces';
+
+
 
 interface MessageData {
   Name: string;
   Message: string;
+  photoURL: string;
 }
 
 @Component({
@@ -27,10 +34,14 @@ export class DashboardPage implements OnInit {
     private navCtrl: NavController,
     private authService: AuthenticateService,
     private firebaseService: FirebaseService,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private storage:AngularFireStorage
   ) { 
     this.messageData = {} as MessageData;
   }
+  @ViewChild('imageUser') inputImageUser: ElementRef;
+  urlImage: Observable<string>;
+  
 
   ngOnInit() {
 
@@ -47,7 +58,8 @@ export class DashboardPage implements OnInit {
 
     this.messageForm = this.fb.group({
       Name: this.userEmail,
-      Message: ['', [Validators.required]]
+      Message: ['', [Validators.required]],
+      photoURL: String(this.urlImage)
     })
 
     this.firebaseService.read_messages().subscribe(data => {
@@ -57,6 +69,7 @@ export class DashboardPage implements OnInit {
           id: e.payload.doc.id,
           Name: e.payload.doc.data()['Name'],
           Message: e.payload.doc.data()['Message'],
+          photoURL: this.inputImageUser.nativeElement.value,
         };
       })
 
@@ -84,5 +97,16 @@ export class DashboardPage implements OnInit {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  onUpload(e) {
+    // console.log('subir', e.target.files[0]);
+    const id = Math.random().toString(36).substring(2);
+    const file = e.target.files[0];
+    const filePath = `uploads/profile_${id}`;
+    const ref = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+    task.snapshotChanges().pipe(finalize(() => this.urlImage = ref.getDownloadURL())).subscribe();
+    console.log("foto", file);
   }
 }
